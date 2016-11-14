@@ -1,0 +1,14 @@
+{application, gen_tracker,
+ [
+  {description, "An Erlang gen_tracker library"},
+  {vsn, "1"},
+  {modules, [
+             gen_tracker
+            ]},
+  {registered, []},
+  {applications, [
+                  kernel,
+                  stdlib
+                 ]},
+  {env, []}
+ ]}.
