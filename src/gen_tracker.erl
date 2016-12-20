@@ -86,7 +86,6 @@ find_or_create(Zone, #{id := ChildId} = ChildSpec) ->
   {stop, Reason :: term()} | ignore).
 init([Zone]) ->
   ets:new(Zone, [set, protected, named_table, {keypos, #entry.key}, {read_concurrency, true}]),
-
   {ok, #state{zone = Zone}}.
 
 %%--------------------------------------------------------------------

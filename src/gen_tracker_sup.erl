@@ -12,7 +12,7 @@
 -behaviour(supervisor).
 
 %% API
--export([start_link/1, start_child/2]).
+-export([start_link/1, start_child/2, child_spec/1, child_spec/2]).
 
 %% Supervisor callbacks
 -export([init/1]).
@@ -22,8 +22,29 @@
 %%%===================================================================
 %%% API functions
 %%%===================================================================
+
+-spec(start_child(atom(), supervisor:child_spec()) ->
+  {ok, Pid :: pid()} | ignore | {error, Reason :: term()}).
 start_child(Zone, Spec) ->
   supervisor:start_child(Zone, Spec).
+
+-spec child_spec([atom()]) -> [supervisor:child_spec()].
+child_spec(ChildSpec) ->
+  child_spec(ChildSpec, []).
+
+-spec child_spec([atom()], [supervisor:child_spec()]) -> [supervisor:child_spec()].
+child_spec([], ChildSpec) ->
+  ChildSpec;
+child_spec([Zone | T], ChildSpec) ->
+  ZoneSpec = #{
+    id => Zone,
+    start => {gen_tracker_sup, start_link, [Zone]},
+    restart => permanent,
+    shutdown => infinity,
+    type => supervisor,
+    modules => []
+  },
+  child_spec(T, [ZoneSpec | ChildSpec]).
 
 %%--------------------------------------------------------------------
 %% @doc
